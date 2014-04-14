@@ -1,0 +1,29 @@
+
+compile		 = "routing.c"
+winopen		 = true
+
+host austin {
+    x=250, y=50
+    winx=250, winy=50
+    link to newyork
+    link to atlanta
+    link to la
+}
+
+host newyork {
+    x=500, y=200
+    winx=550, winy=100
+    link to austin
+}
+
+host atlanta {
+    x=500, y=50
+    winx=500, winy=100
+    link to austin
+}
+
+host la {
+    x=100, y=150
+    winx=550, winy=100
+    link to austin
+}
