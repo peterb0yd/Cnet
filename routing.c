@@ -13,24 +13,58 @@
     must finally reschedule EV_TIMER1 to occur again in another 1000000us.
  */
 
-static EVENT_HANDLER(timeouts)
-{
-    static int which = 0;
+typedef struct {
+    char msg[5];
+} Envelope;
 
-	CNET_disable_application(1);
+static EVENT_HANDLER(timeouts)  {
 
-    ++which;
-    printf("%3d.\t%s\n", which, ((which%2) == 1) ? "tick" : "\ttock");
+	Envelope env = {"World"};
+	size_t  len = 1;
 
-//  RESCHEDULE EV_TIMER1 TO OCCUR AGAIN IN 1SEC
-    CNET_start_timer(EV_TIMER1, 1000000, 0);
+	// SEND MESSAGE
+	CHECK(CNET_write_physical_reliable(1,&env.msg,&len));
+
+
+	// RESCHEDULE EV_TIMER1 TO OCCUR AGAIN IN 1SEC
+   	CNET_start_timer(EV_TIMER1, 1000000, 0);
 }
+
+static EVENT_HANDLER(physical_ready)
+ {
+    	Envelope     env;
+    	size_t	 len;
+
+    	len         = sizeof(env);
+
+	// READ MESSAGE
+	CHECK(CNET_read_physical(0, &env.msg, &len));
+	
+	printf("%3d.\t%s\n", &env.msg);
+
+}
+
+
+static EVENT_HANDLER(application_ready)
+{
+	CNET_enable_application(ALLNODES);   // window not full
+}
+
 
 EVENT_HANDLER(reboot_node)
 {
-//  INDICATE THAT WE ARE INTERESTED IN THE EV_TIMER1 EVENT
-    CHECK(CNET_set_handler(EV_TIMER1, timeouts, 0));
+ 	// SET HANDLERS
+    CHECK(CNET_set_handler( EV_APPLICATIONREADY, application_ready, 0));
+    CHECK(CNET_set_handler( EV_PHYSICALREADY,    physical_ready, 0));
 
-//  REQUEST THAT EV_TIMER1 OCCUR IN 1SEC, IGNORING THE RETURN VALUE
-    CNET_start_timer(EV_TIMER1, 1000000, 0);
+	if(nodeinfo.nodenumber == 0 || nodeinfo.nodenumber == 1) {
+		(void)CNET_enable_application(ALLNODES);
+
+	//  INDICATE THAT WE ARE INTERESTED IN THE EV_TIMER1 EVENT
+		CHECK(CNET_set_handler(EV_TIMER1, timeouts, 0));
+
+	//  REQUEST THAT EV_TIMER1 OCCUR IN 1SEC, IGNORING THE RETURN VALUE
+		CNET_start_timer(EV_TIMER1, 1000000, 0);
+	}
 }
+
