@@ -19,7 +19,7 @@ typedef struct {
 
 static EVENT_HANDLER(timeouts)  {
 
-	Envelope env = {"World"};
+	Envelope env = {"WAX"};
 	size_t  len = 1;
 
 	// SEND MESSAGE
@@ -31,7 +31,7 @@ static EVENT_HANDLER(timeouts)  {
 
 static void send_reliable()
 {
-	Envelope env = {"World"};
+	Envelope env = {"BBB"};
 	size_t  len = 1;
 
     	printf("test");
@@ -42,13 +42,13 @@ static void send_reliable()
 
 static void physical_ready()
 {
-	Envelope env = {"World"};
+	Envelope env = {"CCC"};
 	size_t  len = 1;
-	int link;
+	int link = 3;
 
    	CHECK(CNET_read_physical(&link, &env.msg, &len));
 
-   	printf("physical\n");
+   	printf("%s\n",env.msg);
 
 }
 
