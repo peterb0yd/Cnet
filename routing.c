@@ -53,7 +53,7 @@ static EVENT_HANDLER(application_ready)				// reads application layer
 	MSG austin = {"Austin!"};	// messages = destination
 	MSG atlanta = {"Atlanta!"};
 	MSG newyork = {"New York!"};
-	MSG la = {"Los Angelos!"};
+	MSG la = {"Los Angeles!"};
 
     	CHECK(CNET_read_application(&destaddr, lastmsg, &lastlength));
 	
