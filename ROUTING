@@ -1,0 +1,30 @@
+
+compile		 = "routing.c"
+winopen		 = true
+
+host austin {
+    x=250, y=150
+    winx=250, winy=150
+    address = 1;
+    wan to atlanta
+    wan to newyork
+    wan to la
+}
+
+host atlanta {
+    x=500, y=200
+    winx=500, winy=200
+    address = 2;
+}
+
+host newyork {
+    x=500, y=50
+    winx=500, winy=50
+    address = 3;
+}
+
+host la {
+    x=100, y=150
+    winx=100, winy=150
+    address = 4;
+}
